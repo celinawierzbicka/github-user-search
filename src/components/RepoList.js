@@ -15,10 +15,16 @@ const useStyles = makeStyles((theme) => ({
 
 const RepoList = props => {
     const classes = useStyles(props);
+    const noReposFound = props.repos.length === 0;
+
     const renderRepos = () => {
-        return props.repos.map(repo => {
-            return <Repo repo={repo} key={repo.id}/>
-        })
+        if(noReposFound) {
+            return <Repo noReposFound={noReposFound} />
+        } else {
+            return props.repos.map(repo => {
+                return <Repo repo={repo} key={repo.id}/>
+            })
+        }
     }
 
     return (

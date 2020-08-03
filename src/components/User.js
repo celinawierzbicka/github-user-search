@@ -18,10 +18,25 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#cbcbcb',
     color: theme.palette.text.primary,
     width: 350,
+    '&:hover': {
+        backgroundColor: '#dedede',
+      }
   },
+  icon: {
+    '&:hover': {
+        color: 'blue',
+      }
+  }
 }))
 
 const User = props => {
+    const { 
+        repos,
+        user,
+        selectedUser,
+        displayRepos,
+    } = props;
+
     const classes = useStyles(props);
 
     const onShowRepos = user => {
@@ -32,24 +47,29 @@ const User = props => {
     const onHideRepos = () => {
         props.hideRepos();
     };
-    
-    const isCurrentUserSelected = props.user.login === props.selectedUser;
+
+    const isCurrentUserSelected = user.login === selectedUser;
 
     return (
         <>
-        <Box className={classes.user} >
-            <Typography>{props.user.login}</Typography>
-            {props.displayRepos && isCurrentUserSelected ? 
-                <ChevronUp onClick={() => onHideRepos()} /> 
-                : <ChevronDown onClick={() => onShowRepos(props.user.login)} />}      
-        </Box>
-        {isCurrentUserSelected && props.displayRepos ? <RepoList repos={props.repos} /> : null}
+            <Box className={classes.user} >
+                <Typography>{user.login}</Typography>
+                {displayRepos && isCurrentUserSelected ? 
+                    <ChevronUp className={classes.icon} onClick={() => onHideRepos()} /> 
+                    : <ChevronDown className={classes.icon} onClick={() => onShowRepos(user.login)} />}      
+            </Box>
+            {isCurrentUserSelected && displayRepos ? <RepoList repos={repos} /> : null}
         </>
     )
 }
 
 const mapStateToProps = (state) => {
-    return { repos: state.fetchReducer.repos, selectedUser: state.fetchReducer.selectedUser, displayRepos: state.fetchReducer.displayRepos }
+    const { repos, selectedUser, displayRepos } = state.fetchReducer;
+    return { 
+        repos,
+        selectedUser,
+        displayRepos,
+    }
 }
 
 export default connect(mapStateToProps, { fetchRepos, selectUser, hideRepos })(User)

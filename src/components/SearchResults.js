@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import User from './User';
@@ -16,19 +16,26 @@ const useStyles = makeStyles((theme) => ({
 const SearchResults = props => {
     const classes = useStyles(props);
 
+    const usersNotFound = props.fetchedUsers && props.users.length === 0;
+
     const renderUsers = () => {
-        return props.users.map(user => {
-            return <User user={user} key={user.id}/>
+        return props.users.map((user) => {
+            return <User user={user} key={user.id} />
         })
     }
 
-    return (
-        <Box className={classes.searchResults}>{renderUsers()}</Box>
+    return (usersNotFound ? 
+        <Typography>No users were found.</Typography> 
+        :<Box className={classes.searchResults}>{renderUsers()}</Box>
     )
 }
 
-const mapStateToProps = state => {
-    return { users: state.fetchReducer.users }
+const mapStateToProps = (state) => {
+    const { users, fetchedUsers } = state.fetchReducer;
+    return { 
+        users,
+        fetchedUsers
+    }
 }
 
 export default connect(mapStateToProps)(SearchResults);

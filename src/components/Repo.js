@@ -21,15 +21,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Repo = props => {
-    const classes = useStyles(props);
+    const { repo, noReposFound } = props;
+    const classes = useStyles();
 
     return (
         <Box className={classes.repo} >
-            <Typography variant="body2" >{props.repo.name}</Typography>
-            <Box className={classes.rating} >
-                <Typography>{props.repo.watchers_count}</Typography>
-                <Star size="18"/>   
-            </Box>
+            <Typography variant="body2" >{ noReposFound ? "No repositories available": repo.name }</Typography>
+            {noReposFound ? null : (
+                <Box className={classes.rating} >
+                    <Typography>{repo.watchers_count}</Typography>
+                    <Star size="18"/>   
+                </Box>
+            )}
         </Box>
     )
 }
